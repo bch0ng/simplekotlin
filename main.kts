@@ -1,16 +1,90 @@
+import kotlin.math.*
 // Explore a simple class
-
 println("UW Homework: Simple Kotlin")
 
 // write a "whenFn" that takes an arg of type "Any" and returns a String
+fun whenFn(arg: Any): String
+{
+    return when (arg) {
+        "Hello" -> "world"
+        is String -> "Say what?"
+        0 -> "zero"
+        1 -> "one"
+        in 2..10 -> "low number"
+        is Int -> "a number"
+        else -> "I don't understand"
+    }
+}
 
 // write an "add" function that takes two Ints, returns an Int, and adds the values
 // write a "sub" function that takes two Ints, returns an Int, and subtracts the values
 // write a "mathOp" function that takes two Ints and a function (that takes two Ints and returns an Int), returns an Int, and applies the passed-in-function to the arguments
+fun add(num1: Int, num2: Int): Int
+{
+    return num1 + num2
+}
+
+fun sub(num1: Int, num2: Int): Int
+{
+    return num1 - num2
+}
+
+fun mathOp(num1: Int, num2: Int, body: (num1: Int, num2: Int) -> Int): Int
+{
+    return body(num1, num2)
+}
 
 // write a class "Person" with first name, last name and age
+class Person(var firstName: String, val lastName: String, var age: Int)
+{
+    val debugString: String
+        get() = "[Person firstName:${firstName} lastName:${lastName} age:${age}]"
+    
+    fun equals(otherPerson: Person): Boolean
+    {
+        return this.hashCode() == otherPerson.hashCode()
+    }
+
+    override fun hashCode(): Int
+    {
+        return (firstName + lastName + age).hashCode()
+    }
+}
 
 // write a class "Money"
+data class Money(val amount: Int, val currency: String)
+{
+    val acceptedCurrrency: List<String> = listOf("USD", "EUR", "CAN", "GBP")
+    val exchangeRateToUSD: List<Double> = listOf(1.0, 0.667, 0.8, 2.0)
+
+    init
+    {
+        if (this.amount < 0)
+            throw Exception("Amount cannot be less than zero.")
+        if (this.currency !in acceptedCurrrency)
+            throw Exception("Currency not accepted")
+    }
+
+    public fun convert(currency: String): Money
+    {
+        if (this.currency !in acceptedCurrrency)
+            throw Exception("Currency not accepted")
+        if (this.currency == currency)
+            return Money(this.amount, this.currency)
+        else if (currency == "USD")
+            return Money(round((this.amount * this.exchangeRateToUSD.get(this.acceptedCurrrency.indexOf(this.currency)))).toInt(), "USD")
+        else
+            return Money(round(round((this.amount * this.exchangeRateToUSD.get(this.acceptedCurrrency.indexOf(this.currency)))).toInt() / this.exchangeRateToUSD.get(this.acceptedCurrrency.indexOf(currency))).toInt(), currency)
+    }
+    
+    operator fun plus(otherMoney: Money): Money
+    {
+        if (this.currency != otherMoney.currency)
+            return Money((this.amount + otherMoney.convert(this.currency).amount), this.currency)
+        else
+            return Money((this.amount + otherMoney.amount), this.currency)
+    }
+}
 
 // ============ DO NOT EDIT BELOW THIS LINE =============
 
