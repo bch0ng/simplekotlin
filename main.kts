@@ -3,7 +3,13 @@ import kotlin.math.*
 // Explore a simple class
 println("UW Homework: Simple Kotlin")
 
-// write a "whenFn" that takes an arg of type "Any" and returns a String
+/**
+ * Takes in any argument and returns a string
+ * statement based on input.
+ *
+ * @param arg   an argument
+ * @return      string depending on @param arg
+ */
 fun whenFn(arg: Any): String
 {
     return when (arg) {
@@ -17,42 +23,87 @@ fun whenFn(arg: Any): String
     }
 }
 
-// write an "add" function that takes two Ints, returns an Int, and adds the values
-// write a "sub" function that takes two Ints, returns an Int, and subtracts the values
-// write a "mathOp" function that takes two Ints and a function (that takes two Ints and returns an Int), returns an Int, and applies the passed-in-function to the arguments
+/**
+ * Adds two integers.
+ *
+ * @param num1  first integer
+ * @param num2  second integer
+ * @return      sum of @param num1 and @param num2
+ */
 fun add(num1: Int, num2: Int): Int
 {
     return num1 + num2
 }
 
+/**
+ * Subtracts the second integer from
+ * the first integer.
+ *
+ * @param num1  minuend integer (being subtracted from)
+ * @param num2  subtrahend integer (subtracting)
+ * @return      difference of @param num1 and @param num2
+ */
 fun sub(num1: Int, num2: Int): Int
 {
     return num1 - num2
 }
 
+/**
+ *  Performs math operation given by the body argument.
+ *
+ * @param num1  first integer
+ * @param num2  second integer
+ * @param body  mathematical operation function
+ * @return      result of @param body function
+ *                  on @param num1 and @param num2
+ */
 fun mathOp(num1: Int, num2: Int, body: (num1: Int, num2: Int) -> Int): Int
 {
     return body(num1, num2)
 }
 
-// write a class "Person" with first name, last name and age
+/**
+ * Represents a person.
+ *
+ * @author Brandon Chong
+ * @param firstName first name of person
+ * @param lastname  last name of person
+ * @param age       age of person
+ */
 class Person(var firstName: String, val lastName: String, var age: Int)
 {
     val debugString: String
         get() = "[Person firstName:${firstName} lastName:${lastName} age:${age}]"
     
+    /**
+     *  Returns if this person and another person are the same person.
+     *
+     * @param otherPerson   another Person to compare
+     * @return              if same person or not
+     */
     fun equals(otherPerson: Person): Boolean
     {
         return this.hashCode() == otherPerson.hashCode()
     }
 
+    /**
+     * Returns a generated identifier for this person.
+     *
+     * @return  identifier integer code
+     */
     override fun hashCode(): Int
     {
         return (firstName + lastName + age).hashCode()
     }
 }
 
-// write a class "Money"
+/**
+ * Represents money.
+ *
+ * @author Brandon Chong
+ * @param amount    amount of money
+ * @param currency  currency of money
+ */
 data class Money(val amount: Int, val currency: String)
 {
     val acceptedCurrrency: List<String> = listOf("USD", "EUR", "CAN", "GBP")
@@ -66,6 +117,13 @@ data class Money(val amount: Int, val currency: String)
             throw Exception("Currency not accepted")
     }
 
+    /**
+     * Converts this Money into another currency
+     * and returns as new converted Money.
+     *
+     * @param currency  currency to convert to
+     * @return          new Money in @param currency
+     */
     public fun convert(currency: String): Money
     {
         if (this.currency !in acceptedCurrrency)
@@ -87,6 +145,13 @@ data class Money(val amount: Int, val currency: String)
         }
     }
     
+    /**
+     * Adds two Money objects (converts them if need be)
+     * and returns their sum.
+     *
+     * @param otherMoney    other Money to add to this Money
+     * @returns             new Money sum
+     */
     operator fun plus(otherMoney: Money): Money
     {
         if (this.currency != otherMoney.currency)
