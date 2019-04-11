@@ -1,4 +1,5 @@
 import kotlin.math.*
+
 // Explore a simple class
 println("UW Homework: Simple Kotlin")
 
@@ -71,10 +72,19 @@ data class Money(val amount: Int, val currency: String)
             throw Exception("Currency not accepted")
         if (this.currency == currency)
             return Money(this.amount, this.currency)
-        else if (currency == "USD")
-            return Money(round((this.amount * this.exchangeRateToUSD.get(this.acceptedCurrrency.indexOf(this.currency)))).toInt(), "USD")
-        else
-            return Money(round(round((this.amount * this.exchangeRateToUSD.get(this.acceptedCurrrency.indexOf(this.currency)))).toInt() / this.exchangeRateToUSD.get(this.acceptedCurrrency.indexOf(currency))).toInt(), currency)
+        else {
+            val indexOfCurrency = this.acceptedCurrrency.indexOf(this.currency)
+            val exchangeRateCurrency = this.exchangeRateToUSD.get(indexOfCurrency)
+            val convertedToCurrency = this.amount * exchangeRateCurrency
+            var roundedIntCurrency = round(convertedToCurrency).toInt()
+            if (currency != "USD") {
+                val indexOfCurrency2 = this.acceptedCurrrency.indexOf(currency)
+                val exchangeRateCurrency2 = this.exchangeRateToUSD.get(indexOfCurrency2)
+                val convertedToCurrency2 = roundedIntCurrency / exchangeRateCurrency2
+                roundedIntCurrency = round(convertedToCurrency2).toInt()
+            }
+            return Money(roundedIntCurrency, currency)
+        }
     }
     
     operator fun plus(otherMoney: Money): Money
